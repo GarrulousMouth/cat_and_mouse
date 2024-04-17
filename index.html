@@ -7,7 +7,6 @@
     <style>
       body {
         cursor: url('mouset.png'), auto;
-  
       }
     </style>
 </head>
@@ -26,6 +25,7 @@
       sprite.src = 'sprite.png';
       var frameCount = 0;
       var framesPerUpdate = 10; 
+      var speed = 7;
 
       sprite.onload = function() {
         requestAnimationFrame(update);
@@ -34,9 +34,15 @@
       function update() {
         var dx = target_x - x;
         var dy = target_y - y;
-        x += dx * 0.005;
-        y += dy * 0.005;
-
+        var distance = Math.sqrt(dx * dx + dy * dy);
+        
+        if (distance > speed) {
+          x += (dx / distance) * speed;
+          y += (dy / distance) * speed;
+        } else {
+          x = target_x;
+          y = target_y;
+        }
         frameCount++;
         if (frameCount % framesPerUpdate === 0) {
           frame = (frame === 0 ? 448 : 0);
@@ -51,6 +57,9 @@
       canvas.addEventListener('mousemove', function(e) {
         target_x = e.clientX - canvas.offsetLeft;
         target_y = e.clientY - canvas.offsetTop;
+        if (Math.abs(target_x - x) < 20 && Math.abs(target_y - y) < 20) {
+          window.location.replace('your_eaten.html')
+        } 
       });
     </script>
 </body>
